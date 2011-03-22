@@ -15,9 +15,12 @@ from tagging.models import Tag, TaggedItem
 
 def post_list(request, page=0, paginate_by=20, **kwargs):
     page_size = getattr(settings,'BLOG_PAGESIZE', paginate_by)
+    posts = Post.objects.published()
+    if request.user.has_perm('blog.change_post'):
+	    posts = Post.objects.all()
     return list_detail.object_list(
         request,
-        queryset=Post.objects.published(),
+        queryset=posts,
         paginate_by=page_size,
         page=page,
         **kwargs
@@ -50,13 +53,16 @@ post_archive_month.__doc__ = date_based.archive_month.__doc__
 
 
 def post_archive_day(request, year, month, day, **kwargs):
+    posts = Post.objects.published()
+    if request.user.has_perm('blog.change_post'):
+	    posts = Post.objects.all()
     return date_based.archive_day(
         request,
         year=year,
         month=month,
         day=day,
         date_field='publish',
-        queryset=Post.objects.published(),
+        queryset=posts,
         **kwargs
     )
 post_archive_day.__doc__ = date_based.archive_day.__doc__
@@ -68,7 +74,7 @@ def post_detail(request, slug, year, month, day, **kwargs):
     unpublished post detail for previewing purposes.
     """
     posts = None
-    if request.user.is_superuser:
+    if request.user.has_perm('blog.change_post'):
         posts = Post.objects.all()
     else:
         posts = Post.objects.published()

@@ -49,6 +49,8 @@ class Post(models.Model):
     categories = models.ManyToManyField(Category, blank=True)
     tags = TagField()
     objects = PublicManager()
+    followup_to     = models.ForeignKey('Post',null=True,blank=True,related_name=\
+        "followup_set",help_text="Links to the previous post in a series")
 
     class Meta:
         verbose_name = _('post')
