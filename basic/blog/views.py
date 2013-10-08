@@ -1,11 +1,29 @@
 import re
 
-from django.shortcuts import render_to_response
+from django.views.generic.dates import ArchiveIndexView
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.db.models import Q
 
-from basic.blog.models import Post
+from basic.blog.models import Post, Category
 from basic.tools.constants import STOP_WORDS_RE
+
+
+class PostListCategory(ArchiveIndexView):
+    paginate_by = 20
+    date_field = 'publish'
+    template_object_name = 'object_list'
+    allow_future = False
+    model = Post
+    def get_queryset(self):
+        queryset = super(PostListCategory, self).get_queryset()
+        self.object = get_object_or_404(Category, slug=self.kwargs.get("slug"))
+        return queryset.filter(categories=self.object).order_by('-publish')
+
+    def get_context_data(self, **kwargs):
+        context = super(PostListCategory, self).get_context_data(**kwargs)
+        context['category'] = self.object
+        return context
 
 
 def search(request, template_name='blog/post_search.html'):

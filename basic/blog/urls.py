@@ -3,6 +3,7 @@ from django.views.generic import dates
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from basic.blog.models import Category, Post
+from basic.blog.views import PostListCategory
 
 
 urlpatterns = patterns('basic.blog.views',
@@ -23,7 +24,7 @@ urlpatterns = patterns('basic.blog.views',
         name='blog_archive_year'
     ),
     url(r'^categories/(?P<slug>[-\w]+)/$',
-        DetailView.as_view(model=Category),
+        PostListCategory.as_view(),
         name='blog_category_detail'
     ),
     url (r'^categories/$',
