@@ -7,19 +7,19 @@ from basic.blog.models import Category, Post
 
 urlpatterns = patterns('basic.blog.views',
     url(r'^(?P<year>\d{4})/(?P<month>\w{3})/(?P<day>\d{1,2})/(?P<slug>[-\w]+)/$',
-        view='post_detail',
+        DetailView.as_view(model=Post),
         name='blog_detail'
     ),
     url(r'^(?P<year>\d{4})/(?P<month>\w{3})/(?P<day>\d{1,2})/$',
-        dates.DayArchiveView.as_view(allow_future=False),
+        dates.DayArchiveView.as_view(allow_future=False, date_field='publish', model=Post),
         name='blog_archive_day'
     ),
     url(r'^(?P<year>\d{4})/(?P<month>\w{3})/$',
-        dates.MonthArchiveView.as_view(allow_future=False),
+        dates.MonthArchiveView.as_view(allow_future=False, date_field='publish', model=Post),
         name='blog_archive_month'
     ),
     url(r'^(?P<year>\d{4})/$',
-        dates.YearArchiveView.as_view(allow_future=False),
+        dates.YearArchiveView.as_view(allow_future=False, date_field='publish', model=Post),
         name='blog_archive_year'
     ),
     url(r'^categories/(?P<slug>[-\w]+)/$',
@@ -38,7 +38,7 @@ urlpatterns = patterns('basic.blog.views',
     #    name='blog_index_paginated'
     #),
     url(r'^$',
-        ListView.as_view(model=Post),
-        name='blog_index'
+        dates.ArchiveIndexView.as_view(model=Post, paginate_by=20, date_field='publish', allow_future=False),
+        name='blog_index',
     ),
 )
