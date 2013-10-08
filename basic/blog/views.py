@@ -1,14 +1,12 @@
-import datetime
 import re
 
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from django.http import Http404
-from django.views.generic import date_based, list_detail
+#from django.views.generic import date_based, list_detail
 from django.db.models import Q
 from django.conf import settings
 
-from basic.blog.models import *
+from basic.blog.models import Post
 from basic.tools.constants import STOP_WORDS_RE
 from tagging.models import Tag, TaggedItem
 
@@ -25,7 +23,7 @@ def post_list(request, page=0, paginate_by=20, **kwargs):
         page=page,
         **kwargs
     )
-post_list.__doc__ = list_detail.object_list.__doc__
+    #post_list.__doc__ = list_detail.object_list.__doc__
 
 
 def post_archive_year(request, year, **kwargs):
@@ -37,7 +35,7 @@ def post_archive_year(request, year, **kwargs):
         make_object_list=True,
         **kwargs
     )
-post_archive_year.__doc__ = date_based.archive_year.__doc__
+    #post_archive_year.__doc__ = date_based.archive_year.__doc__
 
 
 def post_archive_month(request, year, month, **kwargs):
@@ -49,7 +47,7 @@ def post_archive_month(request, year, month, **kwargs):
         queryset=Post.objects.published(),
         **kwargs
     )
-post_archive_month.__doc__ = date_based.archive_month.__doc__
+    #post_archive_month.__doc__ = date_based.archive_month.__doc__
 
 
 def post_archive_day(request, year, month, day, **kwargs):
@@ -65,7 +63,7 @@ def post_archive_day(request, year, month, day, **kwargs):
         queryset=posts,
         **kwargs
     )
-post_archive_day.__doc__ = date_based.archive_day.__doc__
+    #post_archive_day.__doc__ = date_based.archive_day.__doc__
 
 
 def post_detail(request, slug, year, month, day, **kwargs):
@@ -88,7 +86,7 @@ def post_detail(request, slug, year, month, day, **kwargs):
         queryset=posts,
         **kwargs
     )
-post_detail.__doc__ = date_based.object_detail.__doc__
+    #post_detail.__doc__ = date_based.object_detail.__doc__
 
 
 def category_list(request, template_name = 'blog/category_list.html', **kwargs):

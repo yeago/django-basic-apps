@@ -1,4 +1,8 @@
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns, url
+from django.views.generic import dates
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from basic.blog.models import Category, Post
 
 
 urlpatterns = patterns('basic.blog.views',
@@ -7,39 +11,34 @@ urlpatterns = patterns('basic.blog.views',
         name='blog_detail'
     ),
     url(r'^(?P<year>\d{4})/(?P<month>\w{3})/(?P<day>\d{1,2})/$',
-        view='post_archive_day',
+        dates.DayArchiveView.as_view(allow_future=False),
         name='blog_archive_day'
     ),
     url(r'^(?P<year>\d{4})/(?P<month>\w{3})/$',
-        view='post_archive_month',
+        dates.MonthArchiveView.as_view(allow_future=False),
         name='blog_archive_month'
     ),
     url(r'^(?P<year>\d{4})/$',
-        view='post_archive_year',
+        dates.YearArchiveView.as_view(allow_future=False),
         name='blog_archive_year'
     ),
     url(r'^categories/(?P<slug>[-\w]+)/$',
-        view='category_detail',
+        DetailView.as_view(model=Category),
         name='blog_category_detail'
     ),
     url (r'^categories/$',
-        view='category_list',
+        ListView.as_view(model=Category),
         name='blog_category_list'
-    ),
-    url(r'^tags/(?P<slug>[-\w]+)/$',
-        view='tag_detail',
-        name='blog_tag_detail'
     ),
     url (r'^search/$',
         view='search',
         name='blog_search'
     ),
-    url(r'^page/(?P<page>\d+)/$',
-        view='post_list',
-        name='blog_index_paginated'
-    ),
+    #url(r'^page/(?P<page>\d+)/$',
+    #    name='blog_index_paginated'
+    #),
     url(r'^$',
-        view='post_list',
+        ListView.as_view(model=Post),
         name='blog_index'
     ),
 )

@@ -2,12 +2,10 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import permalink
 from django.contrib.auth.models import User
-from django.conf import settings
 
 from basic.blog.managers import PublicManager
 
 import datetime
-import tagging
 from tagging.fields import TagField
 
 
