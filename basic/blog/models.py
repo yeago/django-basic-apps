@@ -7,6 +7,7 @@ from basic.blog.managers import PublicManager
 
 import datetime
 from tagging.fields import TagField
+from django.contrib.sites.models import Site
 
 
 class Category(models.Model):
@@ -14,6 +15,9 @@ class Category(models.Model):
     title = models.CharField(_('title'), max_length=100)
     slug = models.SlugField(_('slug'), unique=True)
     site = models.ForeignKey('sites.Site')
+    def save(self, *args, **kwargs):
+        self.site = Site.objects.get_current()
+        super(Post, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = _('category')
@@ -61,6 +65,10 @@ class Post(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.title
+
+    def save(self, *args, **kwargs):
+        self.site = Site.objects.get_current()
+        super(Post, self).save(*args, **kwargs)
 
     @permalink
     def get_absolute_url(self):
