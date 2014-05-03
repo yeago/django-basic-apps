@@ -13,6 +13,7 @@ class Category(models.Model):
     """Category model."""
     title = models.CharField(_('title'), max_length=100)
     slug = models.SlugField(_('slug'), unique=True)
+    site = models.ForeignKey('sites.Site')
 
     class Meta:
         verbose_name = _('category')
@@ -34,6 +35,7 @@ class Post(models.Model):
         (1, _('Draft')),
         (2, _('Public')),
     )
+    site = models.ForeignKey('sites.Site')
     title = models.CharField(_('title'), max_length=200)
     slug = models.SlugField(_('slug'), unique_for_date='publish')
     author = models.ForeignKey(User, blank=True, null=True)
