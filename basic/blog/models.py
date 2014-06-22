@@ -17,7 +17,7 @@ class Category(models.Model):
     site = models.ForeignKey('sites.Site')
     def save(self, *args, **kwargs):
         self.site = Site.objects.get_current()
-        super(Post, self).save(*args, **kwargs)
+        super(Category, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = _('category')
