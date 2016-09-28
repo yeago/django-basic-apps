@@ -15,6 +15,7 @@ class Category(models.Model):
     title = models.CharField(_('title'), max_length=100)
     slug = models.SlugField(_('slug'), unique=True)
     site = models.ForeignKey('sites.Site')
+
     def save(self, *args, **kwargs):
         self.site = Site.objects.get_current()
         super(Category, self).save(*args, **kwargs)
@@ -53,15 +54,18 @@ class Post(models.Model):
     categories = models.ManyToManyField(Category, blank=True)
     tags = TagField()
     objects = PublicManager()
-    followup_to     = models.ForeignKey('Post',null=True,blank=True,related_name=\
-        "followup_set",help_text="Links to the previous post in a series")
+    followup_to = models.ForeignKey('Post', null=True, blank=True, related_name="followup_set",
+                                    help_text="Links to the previous post in a series")
 
     class Meta:
         verbose_name = _('post')
         verbose_name_plural = _('posts')
-        db_table  = 'blog_posts'
-        ordering  = ('-publish',)
+        db_table = 'blog_posts'
+        ordering = ('-publish',)
         get_latest_by = 'publish'
+        permissions = [
+            ('post_editor', 'Post Editor'),
+        ]
 
     def __unicode__(self):
         return u'%s' % self.title
