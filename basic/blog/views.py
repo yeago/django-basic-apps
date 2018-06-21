@@ -1,8 +1,7 @@
 import re
 
 from django.views.generic.dates import ArchiveIndexView
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from django.conf import settings
 
@@ -54,4 +53,4 @@ def search(request, template_name='blog/post_search.html'):
         else:
             message = 'Search term was too vague. Please try again.'
             context = {'message':message}
-    return render_to_response(template_name, context, context_instance=RequestContext(request))
+    return render(request, template_name, context)
