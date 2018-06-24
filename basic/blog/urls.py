@@ -1,15 +1,15 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.views.generic import dates
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from basic.blog.models import Category, Post
-from basic.blog.views import PostListCategory
+from basic.blog.views import PostListCategory, search
 from django.conf import settings
 
 qs = Post.objects.filter(site=settings.SITE_ID)
 
 
-urlpatterns = patterns('basic.blog.views',
+urlpatterns = [
     url(r'^(?P<year>\d{4})/(?P<month>\w{3})/(?P<day>\d{1,2})/(?P<slug>[-\w]+)/$',
         DetailView.as_view(queryset=qs),
         name='blog_detail'
@@ -35,7 +35,7 @@ urlpatterns = patterns('basic.blog.views',
         name='blog_category_list'
     ),
     url (r'^search/$',
-        view='search',
+        view=search,
         name='blog_search'
     ),
     #url(r'^page/(?P<page>\d+)/$',
@@ -45,4 +45,4 @@ urlpatterns = patterns('basic.blog.views',
         dates.ArchiveIndexView.as_view(queryset=qs, paginate_by=20, date_field='publish', allow_future=False),
         name='blog_index',
     ),
-)
+]
