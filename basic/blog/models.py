@@ -70,6 +70,11 @@ class Post(models.Model):
     def __unicode__(self):
         return u'%s' % self.title
 
+    def get_deferred_fields(self):
+        # Make tags not deferred
+        deferred_set = super(Post, self).get_deferred_fields()
+        return {f for f in deferred_set if f != 'tags'}
+
     def save(self, *args, **kwargs):
         self.site = Site.objects.get_current()
         super(Post, self).save(*args, **kwargs)
