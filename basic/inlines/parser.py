@@ -2,7 +2,7 @@ from django.template import TemplateSyntaxError
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.http import Http404
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import smart_text
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
@@ -43,7 +43,7 @@ def render_inline(inline):
         app_label, model_name = inline['type'].split('.')
     except:
         if settings.DEBUG:
-            raise TemplateSyntaxError, "Couldn't find the attribute 'type' in the <inline> tag."
+            raise TemplateSyntaxError("Couldn't find the attribute 'type' in the <inline> tag.")
         else:
             return ''
 
@@ -53,13 +53,13 @@ def render_inline(inline):
         model = content_type.model_class()
     except ContentType.DoesNotExist:
         if settings.DEBUG:
-            raise TemplateSyntaxError, "Inline ContentType not found."
+            raise TemplateSyntaxError("Inline ContentType not found.")
         else:
             return ''
 
     # Check for an inline class attribute
     try:
-        inline_class = smart_unicode(inline['class'])
+        inline_class = smart_text(inline['class'])
     except:
         inline_class = ''
 
@@ -71,7 +71,7 @@ def render_inline(inline):
             context = { 'object_list': obj_list, 'class': inline_class }
         except ValueError:
             if settings.DEBUG:
-                raise ValueError, "The <inline> ids attribute is missing or invalid."
+                raise ValueError("The <inline> ids attribute is missing or invalid.")
             else:
                 return ''
     except KeyError:
@@ -80,12 +80,12 @@ def render_inline(inline):
             context = { 'content_type':"%s.%s" % (app_label, model_name), 'object': obj, 'class': inline_class, 'settings': settings }
         except model.DoesNotExist:
             if settings.DEBUG:
-                raise model.DoesNotExist, "%s with pk of '%s' does not exist" % (model_name, inline['id'])
+                raise model.DoesNotExist("%s with pk of '%s' does not exist" % (model_name, inline['id']))
             else:
                 return ''
         except:
             if settings.DEBUG:
-                raise TemplateSyntaxError, "The <inline> id attribute is missing or invalid."
+                raise TemplateSyntaxError("The <inline> id attribute is missing or invalid.")
             else:
                 return ''
 
