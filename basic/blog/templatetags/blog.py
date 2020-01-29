@@ -41,10 +41,10 @@ def get_latest_posts(parser, token):
     try:
         tag_name, arg = token.contents.split(None, 1)
     except ValueError:
-        raise template.TemplateSyntaxError, "%s tag requires arguments" % token.contents.split()[0]
+        raise template.TemplateSyntaxError("%s tag requires arguments" % token.contents.split()[0])
     m = re.search(r'(.*?) as (\w+)', arg)
     if not m:
-        raise template.TemplateSyntaxError, "%s tag had invalid arguments" % tag_name
+        raise template.TemplateSyntaxError("%s tag had invalid arguments" % tag_name)
     format_string, var_name = m.groups()
     return LatestPosts(format_string, var_name)
 
@@ -75,10 +75,10 @@ def get_blog_categories(parser, token):
     try:
         tag_name, arg = token.contents.split(None, 1)
     except ValueError:
-        raise template.TemplateSyntaxError, "%s tag requires arguments" % token.contents.split()[0]
+        raise template.TemplateSyntaxError("%s tag requires arguments" % token.contents.split()[0])
     m = re.search(r'as (\w+)', arg)
     if not m:
-        raise template.TemplateSyntaxError, "%s tag had invalid arguments" % tag_name
+        raise template.TemplateSyntaxError("%s tag had invalid arguments" % tag_name)
     var_name = m.groups()[0]
     return BlogCategories(var_name)
 
@@ -102,7 +102,7 @@ def get_links(value):
         return soup.findAll('a')
     except ImportError:
         if settings.DEBUG:
-            raise template.TemplateSyntaxError, "Error in 'get_links' filter: BeautifulSoup isn't installed."
+            raise template.TemplateSyntaxError("Error in 'get_links' filter: BeautifulSoup isn't installed.")
     return value
 
 
@@ -132,9 +132,9 @@ def get_blogroll(parser, token):
     try:
         tag_name, arg = token.contents.split(None, 1)
     except ValueError:
-        raise template.TemplateSyntaxError, "%s tag requires arguments" % token.contents.split()[0]
+        raise template.TemplateSyntaxError("%s tag requires arguments" % token.contents.split()[0])
     m = re.search(r'as (\w+)', arg)
     if not m:
-        raise template.TemplateSyntaxError, "%s tag had invalid arguments" % tag_name
+        raise template.TemplateSyntaxError("%s tag had invalid arguments" % tag_name)
     var_name = m.groups()[0]
     return BlogRolls(var_name)
