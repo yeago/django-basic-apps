@@ -32,7 +32,6 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
-    @permalink
     def get_absolute_url(self):
         return reverse('blog_category_detail', kwargs={'slug': self.slug})
 
