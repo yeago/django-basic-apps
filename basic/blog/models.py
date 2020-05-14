@@ -1,6 +1,6 @@
+from django.urls import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.db.models import permalink
 from django.contrib.auth.models import User
 
 from basic.blog.managers import PublicManager
@@ -14,7 +14,7 @@ class Category(models.Model):
     """Category model."""
     title = models.CharField(_('title'), max_length=100)
     slug = models.SlugField(_('slug'), unique=True)
-    site = models.ForeignKey('sites.Site')
+    site = models.ForeignKey('sites.Site', on_delete=models.PROTECT)
 
     def save(self, *args, **kwargs):
         self.site = Site.objects.get_current()
@@ -34,7 +34,7 @@ class Category(models.Model):
 
     @permalink
     def get_absolute_url(self):
-        return ('blog_category_detail', None, {'slug': self.slug})
+        return reverse('blog_category_detail', kwargs={'slug': self.slug})
 
 
 class Post(models.Model):
@@ -43,10 +43,10 @@ class Post(models.Model):
         (1, _('Draft')),
         (2, _('Public')),
     )
-    site = models.ForeignKey('sites.Site')
+    site = models.ForeignKey('sites.Site', on_delete=models.PROTECT)
     title = models.CharField(_('title'), max_length=200)
     slug = models.SlugField(_('slug'), unique_for_date='publish')
-    author = models.ForeignKey(User, blank=True, null=True)
+    author = models.ForeignKey(User, blank=True, null=True, on_delete=models.PROTECT)
     body = models.TextField(_('body'), )
     tease = models.TextField(_('tease'), blank=True, help_text=_('Concise text suggested. Does not appear in RSS feed.'))
     status = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=2)
@@ -57,7 +57,7 @@ class Post(models.Model):
     categories = models.ManyToManyField(Category, blank=True)
     tags = TagField()
     objects = PublicManager()
-    followup_to = models.ForeignKey('Post', null=True, blank=True, related_name="followup_set",
+    followup_to = models.ForeignKey('Post', on_delete=models.PROTECT, null=True, blank=True, related_name="followup_set",
                                     help_text="Links to the previous post in a series")
 
     class Meta:
@@ -85,9 +85,8 @@ class Post(models.Model):
         self.site = Site.objects.get_current()
         super(Post, self).save(*args, **kwargs)
 
-    @permalink
     def get_absolute_url(self):
-        return ('blog_detail', None, {
+        return reverse('blog_detail', kwargs={
             'year': self.publish.year,
             'month': self.publish.strftime('%b').lower(),
             'day': self.publish.day,
