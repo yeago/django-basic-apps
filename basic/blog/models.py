@@ -29,6 +29,9 @@ class Category(models.Model):
     def __unicode__(self):
         return u'%s' % self.title
 
+    def __str__(self):
+        return self.title
+
     @permalink
     def get_absolute_url(self):
         return ('blog_category_detail', None, {'slug': self.slug})
@@ -70,6 +73,9 @@ class Post(models.Model):
     def __unicode__(self):
         return u'%s' % self.title
 
+    def __str__(self):
+        return self.title
+
     def get_deferred_fields(self):
         # Make tags not deferred
         deferred_set = super(Post, self).get_deferred_fields()
@@ -107,6 +113,9 @@ class BlogRoll(models.Model):
         verbose_name_plural = _('blog roll')
 
     def __unicode__(self):
+        return self.name
+
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
